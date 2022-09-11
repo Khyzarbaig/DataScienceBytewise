@@ -57,7 +57,7 @@ print("You got " + str(score) + " questions correct! ")
 print("You got " + str(score/6*100) + " %") 
 ~~~ 
 
-## Project Two Code (Number Guessing Game)
+# Project Two Code (Number Guessing Game)
 ~~~ python 
 import random
 
@@ -94,7 +94,7 @@ while True:
 
 print("You got it in",guesses, "guesses")
 ~~~
-## Project Three code (Rock, Paper, Scissors)
+# Project Three code (Rock, Paper, Scissors)
 ~~~ python
 import random
 
@@ -133,4 +133,89 @@ print("computer won", computer_wins, "times")
 
 
 print("Goodbye!")
+~~~
+# Project four code (Adventure game)
+~~~ python
+name = input("Type your name: ")
+print("Welcome",name,"to this game")
+
+answer = input("You are on a dirt road, it has come to an end and you can go left or right, which way you would like to go? ").lower()
+
+if answer == "left":
+    answer = input("You come to a river, you can walk around it or swim accross?").lower()
+
+    if answer == "swim":
+        print("You swam accross and were eaten by a alligator")
+    elif answer == "walk":
+        print("You walked many miles and ran out of water and energy.")
+
+elif answer == "right":
+    answer = input("Yu come to a bridge, it looks wobbly, do you want to cross it or head back? ").lower()
+
+    if answer == "back":
+        print("You went back and lost.")
+    elif answer == "cross":
+        answer = input("You crossed the bridge and met a stranger. Do you talk to him? ").lower()
+
+        if answer == "yes":
+            print("you talked to the stranger and you got the treasure.")
+        elif answer == "no":
+            print("you ignored the stranger and you were killed")
+
+else:
+    print("Not a valid option, you loose!!")
+
+print("Thanks for playing", name)
+
+~~~
+
+# Project Five code (Password Manager)
+~~~ python
+from cryptography.fernet import Fernet
+'''
+def write_key():
+    key = Fernet.generate_key()
+    with open("key.key","wb") as key_file:
+        key_file.write(key)'''
+
+def load_key():
+    file = open("key.key","rb")
+    key = file.read()
+    file.close()
+    return key
+
+key = load_key()
+fer = Fernet(key)
+
+
+def view():
+    with open('password.txt', 'r') as f:
+        for line in f.readlines():
+            data = line.rstrip()
+            user, passw = data.split("|")
+            print("user:", user, "| password:",
+                  fer.decrypt(passw.encode()).decode())
+
+def add():
+    name = input("Account name: ")
+    pwd = input("Password: ")
+
+    with open('password.txt', 'a') as f:
+        f.write(name + "|" + fer.encrypt(pwd.encode()).decode() + "\n")
+
+
+while True:
+    mode = input("Would you like to add a new password or view existing one? (view/ add) or press q to quit ").lower()
+
+    if mode == "q":
+        break
+
+    elif mode == "view":
+        view()
+
+    elif mode == "add":
+        add()
+
+    else:
+        continue
 ~~~
