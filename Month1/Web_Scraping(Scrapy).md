@@ -53,7 +53,120 @@ class quotesSpider(scrapy.Spider):
         title = response.css("title::text").extract()
         yield {'titletext': title}
 ~~~
+### Terminal commands
+* cd quotettutorial
+* scrapy crawl quotes
 
+##  Extracting data w/ CSS Selectors
+In terminal write :
+* scrapy shell "https://quotes.toscrape.com/" 
+then in shell
+ * response.css("title")
+ * response.css("title").extract()
+ * response.css("title::text").extract()
+ * response.css("span.text::text").extract()
+ * response.css("span.text::text")[2].extract()
+
+## Extracting data w/ XPATH
+In terminal write :
+* response.xpath("//title").extract()
+* response.xpath("//title/text()").extract()
+* response.xpath("//span[@class='text']/text()").extract()
+* response.xpath("//span[@class='text']/text()")[3].extract()
+* response.css("li.next a").xpath("@href").extract()
+* response.css("a").xpath("@href").extract()
+
+## Web Scraping Quotes and Authors
+~~~ python
+import scrapy
+
+class quotesSpider(scrapy.Spider):
+    name = 'quotes'
+    start_urls = ['https://quotes.toscrape.com/']
+
+    def parse(self, response):
+        all_div_quotes = response.css('div.quote')
+        for quotes in all_div_quotes:
+
+            title = all_div_quotes.css('span.text::text').extract()
+            author = all_div_quotes.css('.author::text').extract()
+            tag = all_div_quotes.css('.tag::text').extract()
+            yield {
+                'title' : title,
+                'author' : author,
+                'tag' : tag,
+            }
+~~~
+
+## Item containers ( Storing scraped data )
+Putting all the extracted data in cointainers:
+    * items.py
+~~~ python
+import scrapy
+
+class QuotettutorialItem(scrapy.Item):
+    # define the fields for your item here like:
+    title = scrapy.Field()
+    author = scrapy.Field()
+    tag = scrapy.Field()
+    pass
+~~~
+
+~~~ python
+import scrapy
+from ..items import QuotettutorialItem
+
+class quotesSpider(scrapy.Spider):
+    name = 'quotes'
+    start_urls = ['https://quotes.toscrape.com/']
+
+    def parse(self, response):
+        items = QuotettutorialItem()
+
+        all_div_quotes = response.css('div.quote')
+        for quotes in all_div_quotes:
+
+            title = all_div_quotes.css('span.text::text').extract()
+            author = all_div_quotes.css('.author::text').extract()
+            tag = all_div_quotes.css('.tag::text').extract()
+            items['title'] = title
+            items['author'] = author
+            items['tag'] = tag
+
+            yield items
+~~~
+
+##  Storing in JSON, XML and CSV
+
+* scrapy crawl quotes -o items.json
+* scrapy crawl quotes -o items.csv
+* scrapy crawl quotes -o items.xml
+
+## Pipelines in Web Scraping
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+ 
 
 
 
